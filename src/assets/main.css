@@ -54,3 +54,12 @@ body {
 a {
   text-decoration: none;
 }
+
+::-webkit-scrollbar {
+  width: 12px;
+  position: relative;
+  z-index: 100;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #5a5a5a;
+}

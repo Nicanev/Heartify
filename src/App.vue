@@ -25,12 +25,15 @@ import Player from "./components/Player.vue";
 }
 .sidebar {
   grid-area: sd;
+  background: #111216;
   max-width: 450px;
   min-width: 350px;
 }
 .header {
   grid-area: hd;
   height: 50px;
+  position: relative;
+  z-index: 2;
 }
 .player {
   grid-area: pl;
@@ -38,5 +41,10 @@ import Player from "./components/Player.vue";
 }
 .content {
   grid-area: main;
+  position: relative;
+  z-index: 1;
+  overflow: auto;
+  max-height: 810px;
+  grid-row: 1 / 3;
 }
 </style>

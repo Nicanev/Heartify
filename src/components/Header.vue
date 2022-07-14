@@ -10,7 +10,9 @@
 .header {
   &__content {
     display: grid;
-    margin-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: max-content;
   }
   &__account {
     display: flex;

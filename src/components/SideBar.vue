@@ -78,8 +78,8 @@
 <style lang="scss" scoped>
 .sidebar {
   &__content {
-    margin-left: 30px;
-    margin-top: 20px;
+    padding-left: 30px;
+    padding-top: 20px;
   }
   &__menu {
   }
