@@ -45,8 +45,9 @@
             </defs>
           </svg>
         </div>
-        <div class="circle button-play">
-          <img src="../static/img/icons/Play.svg" alt="Play" />
+        <div class="circle button-play" @click="play">
+          <img v-if="!isPlay" src="../static/img/icons/Play.svg" alt="Play" />
+          <img v-if="isPlay" src="../static/img/icons/Pause.svg" alt="Pause" />
         </div>
         <div class="button-next">
           <svg
@@ -79,21 +80,101 @@
         </div>
       </div>
       <div class="player__progressbar">
-        <input
-          type="range"
-          name="progress-bar"
-          id="progress-bar"
-          class="slider"
-          min="1"
-          max="100"
-          value="10"
-        />
-        <div class="progress-track"></div>
+        <div class="player__time-start time">{{ formatTimeStartTest }}</div>
+        <div class="player__slider-container">
+          <input
+            type="range"
+            name="progress-bar"
+            id="progress-bar"
+            class="slider"
+            min="0"
+            max="100"
+            @click="rewind"
+            v-model="statusSong"
+          />
+          <div
+            class="progress-track"
+            :style="{ width: 'calc(' + statusSong + '%' + ')' }"
+          ></div>
+        </div>
+        <div class="player__time-end time">{{ formatTimeEnd }}</div>
       </div>
     </div>
     <div class="player__volume">Volume</div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      songs: [{ title: "test", duration: 247 }],
+      statusSong: 0,
+      isPlay: false,
+      formatTimeEnd: "",
+      formatTimeStart: "0:00",
+      audio: "",
+      durationSec: "0",
+      rewindStatus: false,
+    };
+  },
+  mounted() {
+    this.formatTimeEnd = this.getTime(this.songs[0].duration);
+    this.audio = new Audio();
+    this.audio.src = "src/static/disturbed-stricken.mp3";
+  },
+  computed: {
+    formatTimeStartTest() {
+      this.durationSec = (this.statusSong * this.songs[0].duration) / 100;
+      this.formatTimeStart = this.getTime(Math.ceil(this.durationSec));
+      return this.getTime(Math.ceil(this.durationSec));
+    },
+  },
+  watch: {
+    isPlay() {
+      let updateTime = setInterval(() => {
+        let nowTime =
+          (Math.ceil(this.audio.currentTime) * 100) / this.songs[0].duration;
+        if (this.rewindStatus) {
+          this.audio.currentTime = this.durationSec;
+          this.rewindStatus = false;
+        } else {
+          this.statusSong = nowTime;
+        }
+      }, 250);
+    },
+  },
+  methods: {
+    play() {
+      if (!this.isPlay) {
+        this.audio.play();
+        this.isPlay = true;
+      } else {
+        this.pause();
+      }
+    },
+    pause() {
+      this.audio.pause();
+      this.isPlay = false;
+    },
+    rewind() {
+      this.rewindStatus = true;
+    },
+    getTime(sec) {
+      let timestamp = sec;
+
+      let hours = Math.floor(timestamp / 60 / 60);
+
+      let minutes = Math.floor(timestamp / 60) - hours * 60;
+
+      let seconds = timestamp % 60;
+
+      let formatted = minutes + ":" + seconds;
+      return formatted;
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .player {
@@ -108,9 +189,14 @@
     align-items: center;
     gap: 25px;
   }
-  &__progressbar {
+  &__slider-container {
     width: 530px;
     position: relative;
+  }
+  &__progressbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     #progress-bar {
       appearance: none;
       height: 8px;
@@ -125,7 +211,7 @@
       height: 8px;
       left: 0px;
       z-index: 99;
-      width: calc(10%);
+      pointer-events: none;
       background: linear-gradient(90deg, #2de66f 0%, #18d25b 100%);
       border-radius: 6px;
     }
@@ -207,6 +293,7 @@
 .circle {
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   width: 40px;
   height: 40px;
@@ -217,5 +304,9 @@
 .circle:active {
   transform: scale(0.95);
   transition: 0.2s;
+}
+.time {
+  margin-top: 5px;
+  font-size: 14px;
 }
 </style>
