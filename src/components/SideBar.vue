@@ -59,27 +59,49 @@
     <div class="sidebar__playlists playlists">
       <div class="playlists__items">
         <div class="playlists__item">
-          <div class="circle">
+          <div class="circle-small">
             <img src="../static/img/icons/Cross.svg" />
           </div>
           <a href="#">Add new playlist</a>
         </div>
         <div class="playlists__item">
-          <div class="circle">
+          <div class="circle-small">
             <img src="../static/img/icons/Like.svg" />
           </div>
           <a href="#">Liked songs</a>
         </div>
       </div>
     </div>
+    <div
+      class="sidebar__resize"
+      @mousedown="position"
+      @mousemove="position"
+    ></div>
   </div>
 </template>
 
-<style lang="scss" scoped>
+<script>
+export default {
+  data() {
+    return {};
+  },
+  methods: {
+    position(e) {
+      if (e.which === 1) {
+        this.$emit("pos", e);
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss">
 .sidebar {
   &__content {
+    position: relative;
     padding-left: 30px;
     padding-top: 20px;
+    z-index: 99;
   }
   &__menu {
   }
@@ -87,6 +109,16 @@
     margin-left: -7px;
     margin-bottom: 30px;
     cursor: pointer;
+  }
+  &__resize {
+    position: absolute;
+    right: -3px;
+    z-index: 100;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    background-color: transparent;
+    cursor: col-resize;
   }
 }
 .playlists {
@@ -111,7 +143,7 @@
       color: white;
       transition: 0.2s;
     }
-    .circle {
+    .circle-small {
       box-shadow: inset 0px 0px 25px rgba(255, 255, 255, 0.4);
       transition: 0.2s;
     }
@@ -144,7 +176,7 @@
     }
   }
 }
-.circle {
+.circle-small {
   display: flex;
   align-items: center;
   justify-content: center;

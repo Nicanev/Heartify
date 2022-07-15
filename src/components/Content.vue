@@ -5,5 +5,6 @@
 <style lang="scss">
 .main__content {
   padding-top: 100px;
+  padding-left: 30px;
 }
 </style>

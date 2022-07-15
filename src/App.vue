@@ -8,11 +8,40 @@ import Player from "./components/Player.vue";
 <template>
   <div class="wrapper">
     <Header class="header" />
-    <Sidebar class="sidebar" />
+    <Sidebar class="sidebar" @pos="resizeSideBar" :style="{ width: resizeX }" />
     <Content class="content" />
     <Player class="player" />
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      menuPositionX: "",
+      menuPositionY: "",
+      resizeX: "250px",
+    };
+  },
+  methods: {
+    resizeSideBar(e) {
+      let position = this.getPosition(e);
+      this.resizeX = position.x + "px";
+    },
+    getPosition(e) {
+      let posx;
+      let posy;
+      posx = e.pageX;
+      posy = e.pageY;
+
+      return {
+        x: posx,
+        y: posy,
+      };
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .wrapper {
@@ -26,8 +55,8 @@ import Player from "./components/Player.vue";
 .sidebar {
   grid-area: sd;
   background: #111216;
-  max-width: 450px;
-  min-width: 350px;
+  max-width: 400px;
+  min-width: 200px;
 }
 .header {
   grid-area: hd;
