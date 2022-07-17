@@ -7,9 +7,12 @@ import Player from "./components/Player.vue";
 
 <template>
   <div class="wrapper">
-    <Header class="header" />
+    <Header
+      class="header"
+      :style="{ background: 'rgba(27, 54, 43,' + opacity + '%' + ')' }"
+    />
     <Sidebar class="sidebar" @pos="resizeSideBar" :style="{ width: resizeX }" />
-    <Content class="content" />
+    <Content class="content" @scroll="onScroll" />
     <Player class="player" />
   </div>
 </template>
@@ -21,12 +24,39 @@ export default {
       menuPositionX: "",
       menuPositionY: "",
       resizeX: "250px",
+      opacity: 0,
     };
   },
   methods: {
     resizeSideBar(e) {
       let position = this.getPosition(e);
       this.resizeX = position.x + "px";
+    },
+    onScroll() {
+      let main = document.getElementById("main");
+      let scroll = main.scrollTop;
+
+      if (scroll > 225 || scroll < 235) {
+        this.opacity = 10;
+      }
+      if (scroll > 235 || scroll < 245) {
+        this.opacity = 20;
+      }
+      if (scroll > 245 || scroll < 255) {
+        this.opacity = 30;
+      }
+      if (scroll > 255 || scroll < 265) {
+        this.opacity = 40;
+      }
+      if (scroll > 265 || scroll < 275) {
+        this.opacity = 50;
+      }
+      if (scroll > 275) {
+        this.opacity = 100;
+      }
+      if (scroll < 225) {
+        this.opacity = 0;
+      }
     },
     getPosition(e) {
       let posx;
@@ -43,7 +73,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .wrapper {
   display: grid;
   min-height: 100vh;
@@ -60,8 +90,9 @@ export default {
 }
 .header {
   grid-area: hd;
-  height: 50px;
+  height: 70px;
   position: relative;
+  background: rgba(27, 54, 43, 100%);
   z-index: 2;
 }
 .player {

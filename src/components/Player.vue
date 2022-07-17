@@ -5,8 +5,10 @@
         <img src="../static/img/album-image.png" alt="album-image" />
       </div>
       <div class="track-info__description">
-        <div class="track-info__title"><a href="#"> Stricken</a></div>
-        <div class="track-info__performer"><a href="#">Disturbed</a></div>
+        <div class="track-info__title">
+          <a href="#"> Metal (Dark Matter)</a>
+        </div>
+        <div class="track-info__performer"><a href="#">AlexGrohl</a></div>
       </div>
     </div>
     <div class="player__control-panel">
@@ -203,7 +205,7 @@
 export default {
   data() {
     return {
-      songs: [{ title: "test", duration: 247 }],
+      songs: [{ title: "test", duration: 153 }],
       statusSong: 0,
       statusVolume: 20,
       isPlay: false,
@@ -217,7 +219,7 @@ export default {
   mounted() {
     this.formatTimeEnd = this.getTime(this.songs[0].duration);
     this.audio = new Audio();
-    this.audio.src = "src/static/disturbed-stricken.mp3";
+    this.audio.src = "src/static/metal-dark-matter.mp3";
   },
   computed: {
     formatTimeStartTest() {

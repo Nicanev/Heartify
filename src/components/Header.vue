@@ -10,14 +10,13 @@
 .header {
   &__content {
     display: grid;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    height: max-content;
+    height: 100%;
   }
   &__account {
     display: flex;
     align-items: center;
     gap: 15px;
+    align-self: center;
     height: max-content;
     padding: 5px 30px 5px 5px;
     justify-self: end;
