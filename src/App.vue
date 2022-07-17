@@ -93,6 +93,7 @@ export default {
   height: 70px;
   position: relative;
   background: rgba(27, 54, 43, 100%);
+  transition: 0.2s;
   z-index: 2;
 }
 .player {

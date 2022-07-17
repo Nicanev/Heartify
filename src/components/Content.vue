@@ -28,7 +28,7 @@
   }
   &__background {
     width: 100%;
-    height: 100vh;
+    height: 1500px;
     background: linear-gradient(180deg, #25aa57 5.09%, #181a20 43.28%);
     position: absolute;
   }
