@@ -57,6 +57,7 @@
                 </td>
                 <td class="play-btn" v-if="mouseOver == index" align="center">
                   <svg
+                    @click="play(song)"
                     width="13"
                     height="14"
                     viewBox="0 0 13 14"
@@ -73,7 +74,7 @@
                   <div class="playlist__track-info track-info">
                     <div class="track-info__img">
                       <img
-                        src="../static/img/albums/Ten-Thousand-Fists.jpg"
+                        :src="'/src/static/img/albums/' + song.album_img"
                         alt=""
                       />
                     </div>
@@ -107,13 +108,13 @@ export default {
     return {
       songs: [
         {
-          title: "test",
-          perform: "Disturbed",
-          album: "Ten Thousand Fists",
-          album_img: "Ten-Thousand-Fists.jpg",
-          src: "Stricken.mp3",
+          title: "Metal (Dark Matter)",
+          perform: "AlexGrohl",
+          album: "Alex Grohl",
+          album_img: "alex-grohl.jpg",
+          src: "metal-dark-matter.mp3",
           date_ad: "4 hours ago",
-          duration: 257,
+          duration: 153,
         },
         {
           title: "test2",
@@ -122,14 +123,20 @@ export default {
           album_img: "Ten-Thousand-Fists.jpg",
           src: "Stricken.mp3",
           date_ad: "4 hours ago",
-          duration: 153,
+          duration: 257,
         },
       ],
       mouseOver: null,
       formatTimeEnd: "",
     };
   },
+  mounted() {
+    this.$emit("track", this.songs[0]);
+  },
   methods: {
+    play(track) {
+      this.$emit("track", track);
+    },
     getTime(sec) {
       let timestamp = sec;
 
@@ -247,9 +254,6 @@ export default {
 
       border-bottom: 1px solid #666666;
       font-size: 16px;
-    }
-    svg path:hover {
-      fill: white;
     }
   }
 }

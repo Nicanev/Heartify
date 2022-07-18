@@ -1,14 +1,19 @@
 <template>
   <div class="player__content">
-    <div class="player__track-info">
+    <div class="player__track-info" v-if="track">
       <div class="track-info__img">
-        <img src="../static/img/album-image.png" alt="album-image" />
+        <img
+          :src="'/src/static/img/albums/' + track.album_img"
+          alt="album-image"
+        />
       </div>
       <div class="track-info__description">
         <div class="track-info__title">
-          <a href="#"> Metal (Dark Matter)</a>
+          <a href="#" v-if="track"> {{ track.title }}</a>
         </div>
-        <div class="track-info__performer"><a href="#">AlexGrohl</a></div>
+        <div class="track-info__performer">
+          <a href="#">{{ track.perform }}</a>
+        </div>
       </div>
     </div>
     <div class="player__control-panel">
@@ -47,7 +52,7 @@
             </defs>
           </svg>
         </div>
-        <div class="circle button-play" @click="play">
+        <div class="circle button-play" @click="playSong">
           <img v-if="!isPlay" src="../static/img/icons/Play.svg" alt="Play" />
           <img v-if="isPlay" src="../static/img/icons/Pause.svg" alt="Pause" />
         </div>
@@ -82,7 +87,9 @@
         </div>
       </div>
       <div class="player__progressbar">
-        <div class="player__time-start time">{{ formatTimeStartTest }}</div>
+        <div class="player__time-start time">
+          {{ formatTimeStartUpdate }}
+        </div>
         <div class="player__slider-container">
           <input
             type="range"
@@ -203,6 +210,7 @@
 
 <script>
 export default {
+  props: ["track"],
   data() {
     return {
       songs: [{ title: "test", duration: 153 }],
@@ -217,14 +225,19 @@ export default {
     };
   },
   mounted() {
-    this.formatTimeEnd = this.getTime(this.songs[0].duration);
+    this.formatTimeEnd = this.getTime(this.track.duration);
     this.audio = new Audio();
-    this.audio.src = "src/static/metal-dark-matter.mp3";
+    this.audio.src = "src/static/music/" + this.track.src;
   },
   computed: {
-    formatTimeStartTest() {
-      this.durationSec = (this.statusSong * this.songs[0].duration) / 100;
+    formatTimeStartUpdate() {
+      this.durationSec = (this.statusSong * this.track.duration) / 100;
+      if (this.durationSec >= this.audio.duration) {
+        this.durationSec = this.durationSec - 1;
+        this.pause();
+      }
       this.formatTimeStart = this.getTime(Math.ceil(this.durationSec));
+
       return this.getTime(Math.ceil(this.durationSec));
     },
   },
@@ -232,7 +245,7 @@ export default {
     isPlay() {
       let updateTime = setInterval(() => {
         let nowTime =
-          (Math.ceil(this.audio.currentTime) * 100) / this.songs[0].duration;
+          (Math.ceil(this.audio.currentTime) * 100) / this.track.duration;
         if (this.rewindStatus) {
           this.audio.currentTime = this.durationSec;
           this.rewindStatus = false;
@@ -244,9 +257,14 @@ export default {
     statusVolume() {
       this.audio.volume = this.statusVolume / 100;
     },
+    track() {
+      if (this.track) {
+        this.formatTimeEnd = this.getTime(this.track.duration);
+      }
+    },
   },
   methods: {
-    play() {
+    playSong() {
       if (!this.isPlay) {
         this.audio.play();
         this.audio.volume = this.statusVolume / 100;
@@ -323,6 +341,7 @@ export default {
       border-radius: 6px;
     }
     #progress-bar::-webkit-slider-thumb {
+      display: none;
       appearance: none;
       position: relative;
       z-index: 100;
@@ -331,6 +350,11 @@ export default {
       border-radius: 50%;
       background: linear-gradient(90deg, #2ae46d 0%, #0fca52 100%);
       cursor: pointer;
+    }
+  }
+  &__progressbar:hover {
+    #progress-bar::-webkit-slider-thumb {
+      display: block;
     }
   }
   &__track-info {
@@ -410,8 +434,6 @@ export default {
       border-radius: 6px;
     }
   }
-  &__progressbar:hover {
-  }
 }
 .volume:hover {
   input::-webkit-slider-thumb {
@@ -446,6 +468,11 @@ export default {
 .track-info {
   &__img {
     cursor: pointer;
+    img {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+    }
   }
   &__description {
     display: grid;

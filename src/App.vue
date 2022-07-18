@@ -12,8 +12,8 @@ import Player from "./components/Player.vue";
       :style="{ background: 'rgba(27, 54, 43,' + opacity + '%' + ')' }"
     />
     <Sidebar class="sidebar" @pos="resizeSideBar" :style="{ width: resizeX }" />
-    <Content class="content" @scroll="onScroll" />
-    <Player class="player" />
+    <Content class="content" @scroll="onScroll" @track="getTrack" />
+    <Player class="player" :track="track" />
   </div>
 </template>
 
@@ -25,12 +25,16 @@ export default {
       menuPositionY: "",
       resizeX: "250px",
       opacity: 0,
+      track: null,
     };
   },
   methods: {
     resizeSideBar(e) {
       let position = this.getPosition(e);
       this.resizeX = position.x + "px";
+    },
+    getTrack(track) {
+      this.track = track;
     },
     onScroll() {
       let main = document.getElementById("main");
