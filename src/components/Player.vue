@@ -273,7 +273,9 @@ export default {
       let minutes = Math.floor(timestamp / 60) - hours * 60;
 
       let seconds = timestamp % 60;
-
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
       let formatted = minutes + ":" + seconds;
       return formatted;
     },
@@ -281,7 +283,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .player {
   &__content {
     display: grid;
@@ -362,39 +364,7 @@ export default {
     transition: 0.2s;
   }
 }
-.track-info {
-  &__img {
-    cursor: pointer;
-  }
-  &__description {
-    display: grid;
-    grid-template-columns: auto;
-    align-items: center;
 
-    font-weight: bold;
-  }
-  &__title {
-    a {
-      font-size: 16px;
-      text-decoration: none;
-      color: white;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  }
-  &__performer {
-    a {
-      font-size: 12px;
-      color: #9c9c9d;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-      color: white;
-    }
-  }
-}
 .volume {
   display: flex;
   align-items: center;
@@ -470,5 +440,40 @@ export default {
 .time {
   margin-top: 5px;
   font-size: 14px;
+}
+</style>
+<style lang="scss" scoped>
+.track-info {
+  &__img {
+    cursor: pointer;
+  }
+  &__description {
+    display: grid;
+    grid-template-columns: auto;
+    align-items: center;
+
+    font-weight: bold;
+  }
+  &__title {
+    a {
+      font-size: 16px;
+      text-decoration: none;
+      color: white;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+  &__performer {
+    a {
+      font-size: 12px;
+      color: #9c9c9d;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+  }
 }
 </style>
