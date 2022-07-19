@@ -12,8 +12,13 @@ import Player from "./components/Player.vue";
       :style="{ background: 'rgba(27, 54, 43,' + opacity + '%' + ')' }"
     />
     <Sidebar class="sidebar" @pos="resizeSideBar" :style="{ width: resizeX }" />
-    <Content class="content" @scroll="onScroll" @track="getTrack" />
-    <Player class="player" :track="track" />
+    <Content
+      class="content"
+      @scroll="onScroll"
+      @track="getTrack"
+      :switch="switch"
+    />
+    <Player class="player" :track="track" @switch="getSwitch" />
   </div>
 </template>
 
@@ -26,6 +31,7 @@ export default {
       resizeX: "250px",
       opacity: 0,
       track: null,
+      switch: null,
     };
   },
   methods: {
@@ -35,6 +41,9 @@ export default {
     },
     getTrack(track) {
       this.track = track;
+    },
+    getSwitch(switchStatus) {
+      this.switch = switchStatus;
     },
     onScroll() {
       let main = document.getElementById("main");

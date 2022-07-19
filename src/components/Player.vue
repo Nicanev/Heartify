@@ -18,7 +18,7 @@
     </div>
     <div class="player__control-panel">
       <div class="player__buttons">
-        <div class="button-back">
+        <div class="button-back" @click="switchBack">
           <svg
             width="15"
             height="15"
@@ -56,7 +56,7 @@
           <img v-if="!isPlay" src="../static/img/icons/Play.svg" alt="Play" />
           <img v-if="isPlay" src="../static/img/icons/Pause.svg" alt="Pause" />
         </div>
-        <div class="button-next">
+        <div class="button-next" @click="switchNext">
           <svg
             width="15"
             height="15"
@@ -222,6 +222,8 @@ export default {
       audio: "",
       durationSec: "0",
       rewindStatus: false,
+      curTrack: this.track,
+      firstStart: true,
     };
   },
   mounted() {
@@ -235,6 +237,7 @@ export default {
       if (this.durationSec >= this.audio.duration) {
         this.durationSec = this.durationSec - 1;
         this.pause();
+        this.switchNext();
       }
       this.formatTimeStart = this.getTime(Math.ceil(this.durationSec));
 
@@ -260,15 +263,34 @@ export default {
     track() {
       if (this.track) {
         this.formatTimeEnd = this.getTime(this.track.duration);
+        if (this.curTrack != this.track) {
+          this.curTrack = this.track;
+          this.pause();
+          this.audio.currentTime = 0;
+          this.durationSec = "0";
+          this.audio.src = "src/static/music/" + this.track.src;
+          if (this.firstStart) {
+            this.firstStart = false;
+          } else {
+            this.playSong();
+          }
+        }
       }
     },
   },
   methods: {
+    switchNext() {
+      this.$emit("switch", ["next"]);
+    },
+    switchBack() {
+      this.$emit("switch", ["back"]);
+    },
     playSong() {
       if (!this.isPlay) {
         this.audio.play();
         this.audio.volume = this.statusVolume / 100;
         this.isPlay = true;
+        // this.$emit("playStatus", this.isPlay);
       } else {
         this.pause();
       }

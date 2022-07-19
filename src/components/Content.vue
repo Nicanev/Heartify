@@ -57,7 +57,7 @@
                 </td>
                 <td class="play-btn" v-if="mouseOver == index" align="center">
                   <svg
-                    @click="play(song)"
+                    @click="play(song, index)"
                     width="13"
                     height="14"
                     viewBox="0 0 13 14"
@@ -104,38 +104,94 @@
 
 <script>
 export default {
+  props: ["switch"],
   data() {
     return {
       songs: [
         {
-          title: "Metal (Dark Matter)",
-          perform: "AlexGrohl",
-          album: "Alex Grohl",
-          album_img: "alex-grohl.jpg",
-          src: "metal-dark-matter.mp3",
+          title: "Relight",
+          perform: "DSTechnician",
+          album: "DSTechnicianl",
+          album_img: "unknown.jpg",
+          src: "relight.mp3",
           date_ad: "4 hours ago",
-          duration: 153,
+          duration: 66,
+          isSelect: false,
         },
         {
-          title: "test2",
-          perform: "Disturbed",
-          album: "Ten Thousand Fists",
-          album_img: "Ten-Thousand-Fists.jpg",
-          src: "Stricken.mp3",
+          title: "Relics",
+          perform: "DSTechnician",
+          album: "DSTechnicianl",
+          album_img: "unknown.jpg",
+          src: "relics.mp3",
           date_ad: "4 hours ago",
-          duration: 257,
+          duration: 333,
+          isSelect: false,
+        },
+        {
+          title: "Let The Games Begin",
+          perform: "Psychronic",
+          album: "Psychronic",
+          album_img: "unknown.jpg",
+          src: "let-the-games-begin.mp3",
+          date_ad: "4 hours ago",
+          duration: 162,
+          isSelect: false,
+        },
+        {
+          title: "Game Music",
+          perform: "DeepMusicEveryDay",
+          album: "DeepMusicEveryDay",
+          album_img: "unknown.jpg",
+          src: "game-music.mp3",
+          date_ad: "4 hours ago",
+          duration: 40,
+          isSelect: false,
         },
       ],
       mouseOver: null,
       formatTimeEnd: "",
+      playingID: null,
     };
   },
   mounted() {
     this.$emit("track", this.songs[0]);
   },
+  watch: {
+    switch() {
+      if (this.switch[0] == "next") {
+        if (this.playingID == null) {
+          this.playingID = 0;
+          this.$emit("track", this.songs[this.playingID + 1]);
+        } else if (this.songs[this.playingID + 1]) {
+          this.$emit("track", this.songs[this.playingID + 1]);
+          this.playingID++;
+        } else if (!("track", this.songs[this.playingID + 1])) {
+          this.playingID = 0;
+          this.$emit("track", this.songs[this.playingID]);
+        }
+      }
+      if (this.switch[0] == "back") {
+        if (this.playingID == null) {
+          this.playingID = this.songs.length - 1;
+          this.$emit("track", this.songs[this.playingID]);
+        } else if (this.songs[this.playingID - 1]) {
+          this.playingID--;
+          this.$emit("track", this.songs[this.playingID]);
+        } else if (this.playingID == 0) {
+          this.playingID = this.songs.length - 1;
+          this.$emit("track", this.songs[this.playingID]);
+        } else if (!this.songs[this.playingID - 1]) {
+          this.playingID = 0;
+          this.$emit("track", this.songs[this.playingID]);
+        }
+      }
+    },
+  },
   methods: {
-    play(track) {
+    play(track, id) {
       this.$emit("track", track);
+      this.playingID = id;
     },
     getTime(sec) {
       let timestamp = sec;
