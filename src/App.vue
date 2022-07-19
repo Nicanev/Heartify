@@ -17,8 +17,14 @@ import Player from "./components/Player.vue";
       @scroll="onScroll"
       @track="getTrack"
       :switch="switch"
+      :playStatus="playStatus"
     />
-    <Player class="player" :track="track" @switch="getSwitch" />
+    <Player
+      class="player"
+      :track="track"
+      @switch="getSwitch"
+      @playStatus="getPlayStatus"
+    />
   </div>
 </template>
 
@@ -32,6 +38,7 @@ export default {
       opacity: 0,
       track: null,
       switch: null,
+      playStatus: null,
     };
   },
   methods: {
@@ -44,6 +51,9 @@ export default {
     },
     getSwitch(switchStatus) {
       this.switch = switchStatus;
+    },
+    getPlayStatus(playStatus) {
+      this.playStatus = playStatus;
     },
     onScroll() {
       let main = document.getElementById("main");

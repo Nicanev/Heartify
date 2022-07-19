@@ -51,12 +51,18 @@
                 v-bind:key="song"
                 @mouseover="mouseOverSong(index)"
                 @mouseleave="mouseLeaveSong"
+                @click="selectItem($event, index)"
+                :class="{
+                  playing: playingID == index,
+                  'selected-item': song.isSelect,
+                }"
               >
                 <td class="id" v-if="mouseOver != index" align="center">
                   {{ index + 1 }}
                 </td>
                 <td class="play-btn" v-if="mouseOver == index" align="center">
                   <svg
+                    v-if="!isPlay || playingID != index"
                     @click="play(song, index)"
                     width="13"
                     height="14"
@@ -66,6 +72,24 @@
                   >
                     <path
                       d="M1.50171 14C1.25225 13.9996 1.0072 13.9383 0.790673 13.8223C0.303105 13.5636 0 13.0615 0 12.5163V1.48376C0 0.937074 0.303105 0.436424 0.790673 0.177729C1.01235 0.0584393 1.26419 -0.00290576 1.51985 0.000105775C1.77552 0.00311731 2.02562 0.0703751 2.24403 0.194849L12.3143 5.83895C12.5242 5.96217 12.6972 6.13328 12.8172 6.33623C12.9371 6.53918 13 6.76733 13 6.99927C13 7.23122 12.9371 7.45936 12.8172 7.66232C12.6972 7.86527 12.5242 8.03638 12.3143 8.15959L2.24241 13.8052C2.0189 13.9317 1.76289 13.9991 1.50171 14V14Z"
+                      fill="white"
+                    />
+                  </svg>
+                  <svg
+                    v-if="isPlay && playingID == index"
+                    @click="play(song, index)"
+                    width="13"
+                    height="14"
+                    viewBox="0 0 13 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4.5194 12.05C4.5194 13.1269 3.50763 14 2.2597 14C1.01177 14 0 13.1269 0 12.05V1.95001C0 0.873107 1.01177 0 2.2597 0C3.50763 0 4.5194 0.873107 4.5194 1.95001V12.05Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M13 12.05C13 13.1269 11.9882 14 10.7403 14C9.49236 14 8.48059 13.1269 8.48059 12.05V1.95001C8.48093 0.873107 9.4927 0 10.7403 0C11.9882 0 13 0.873107 13 1.95001V12.05Z"
                       fill="white"
                     />
                   </svg>
@@ -104,7 +128,7 @@
 
 <script>
 export default {
-  props: ["switch"],
+  props: ["switch", "playStatus"],
   data() {
     return {
       songs: [
@@ -125,7 +149,7 @@ export default {
           album_img: "unknown.jpg",
           src: "relics.mp3",
           date_ad: "4 hours ago",
-          duration: 333,
+          duration: 347,
           isSelect: false,
         },
         {
@@ -152,6 +176,7 @@ export default {
       mouseOver: null,
       formatTimeEnd: "",
       playingID: null,
+      isPlay: null,
     };
   },
   mounted() {
@@ -187,11 +212,20 @@ export default {
         }
       }
     },
+    playStatus() {
+      if (this.isPlay == null) {
+        this.playingID = 0;
+      }
+      this.isPlay = this.playStatus;
+    },
   },
   methods: {
     play(track, id) {
       this.$emit("track", track);
       this.playingID = id;
+    },
+    selectItem(e, item) {
+      this.songs[item].isSelect = !this.songs[item].isSelect;
     },
     getTime(sec) {
       let timestamp = sec;
@@ -218,6 +252,12 @@ export default {
 </script>
 
 <style lang="scss">
+.selected-item {
+  background: #ffffff44;
+}
+.selected-item:hover {
+  background: #ffffff44 !important;
+}
 .main {
   &__content {
     padding-top: 100px;
@@ -299,7 +339,7 @@ export default {
       border-radius: 0 6px 6px 0;
     }
     tr:not(:first-child):hover {
-      background: #ffffff2a;
+      background: #ffffff18;
     }
 
     th {
@@ -380,6 +420,16 @@ export default {
     }
     a:hover {
       text-decoration: underline;
+    }
+  }
+}
+.playing {
+  .id {
+    color: #65d36e;
+  }
+  .track-info__title {
+    a {
+      color: #65d36e;
     }
   }
 }

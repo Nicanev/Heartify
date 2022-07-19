@@ -290,7 +290,7 @@ export default {
         this.audio.play();
         this.audio.volume = this.statusVolume / 100;
         this.isPlay = true;
-        // this.$emit("playStatus", this.isPlay);
+        this.$emit("playStatus", this.isPlay);
       } else {
         this.pause();
       }
@@ -298,6 +298,7 @@ export default {
     pause() {
       this.audio.pause();
       this.isPlay = false;
+      this.$emit("playStatus", this.isPlay);
     },
     mute() {
       this.statusVolume = 0;
@@ -324,6 +325,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .player {
   &__content {
     display: grid;
