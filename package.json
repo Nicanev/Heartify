@@ -14,5 +14,17 @@
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2",
     "vite": "^2.9.14"
-  }
+  },
+  "description": "This template should help get you started developing with Vue 3 in Vite.",
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nicanev/Heartify.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nicanev/Heartify/issues"
+  },
+  "homepage": "https://github.com/Nicanev/Heartify#readme"
 }

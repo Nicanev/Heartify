@@ -16,6 +16,8 @@ import Player from "./components/Player.vue";
       class="content"
       @scroll="onScroll"
       @track="getTrack"
+      @context-menu="getContextMenuStatus"
+      @click.right="openContextMenu"
       :switch="switch"
       :playStatus="playStatus"
     />
@@ -25,6 +27,17 @@ import Player from "./components/Player.vue";
       @switch="getSwitch"
       @playStatus="getPlayStatus"
     />
+    <div
+      class="context-menu"
+      :style="{ left: menuPositionX, top: menuPositionY }"
+      v-if="isContextMenyActive"
+    >
+      <ul>
+        <li><a href="#">Play</a></li>
+        <li><a href="#">Add to queue</a></li>
+        <li><a href="#">Add to playlist</a></li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -39,9 +52,17 @@ export default {
       track: null,
       switch: null,
       playStatus: null,
+      isContextMenyActive: false,
     };
   },
   methods: {
+    getContextMenuStatus(status) {
+      if (status == true) {
+        this.isContextMenyActive = true;
+      } else {
+        this.isContextMenyActive = false;
+      }
+    },
     resizeSideBar(e) {
       let position = this.getPosition(e);
       this.resizeX = position.x + "px";
@@ -81,6 +102,13 @@ export default {
         this.opacity = 0;
       }
     },
+    openContextMenu(e) {
+      e.preventDefault();
+
+      let menuPosition = this.getPosition(e);
+      this.menuPositionX = menuPosition.x + "px";
+      this.menuPositionY = menuPosition.y + "px";
+    },
     getPosition(e) {
       let posx;
       let posy;
@@ -97,6 +125,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.context-menu {
+  position: absolute;
+  z-index: 1000;
+  background-color: rgb(27, 27, 27);
+  width: max-content;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding: 15px;
+    cursor: pointer;
+  }
+  li:hover {
+    background-color: rgba(66, 66, 66, 0.562);
+  }
+  a {
+    color: white;
+  }
+}
 .wrapper {
   display: grid;
   min-height: 100vh;
@@ -130,5 +179,8 @@ export default {
   overflow: auto;
   max-height: 810px;
   grid-row: 1 / 3;
+  @media screen and (min-height: 950px) {
+    max-height: 870px;
+  }
 }
 </style>

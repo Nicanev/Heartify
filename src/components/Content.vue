@@ -52,13 +52,35 @@
                 @mouseover="mouseOverSong(index)"
                 @mouseleave="mouseLeaveSong"
                 @click="selectItem($event, index)"
+                @click.right="openContextMenu"
                 :class="{
                   playing: playingID == index,
                   'selected-item': song.isSelect,
                 }"
               >
-                <td class="id" v-if="mouseOver != index" align="center">
+                <td
+                  class="id"
+                  v-if="mouseOver != index && (!isPlay || playingID != index)"
+                  align="center"
+                >
                   {{ index + 1 }}
+                </td>
+                <td
+                  v-if="mouseOver != index && isPlay && playingID == index"
+                  align="center"
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 28 28"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect x="6" y="5" width="3" height="18" fill="#65D36E" />
+                    <rect x="10" y="19" width="3" height="4" fill="#65D36E" />
+                    <rect x="14" y="9" width="3" height="14" fill="#65D36E" />
+                    <rect x="18" y="19" width="3" height="4" fill="#65D36E" />
+                  </svg>
                 </td>
                 <td class="play-btn" v-if="mouseOver == index" align="center">
                   <svg
@@ -163,13 +185,13 @@ export default {
           isSelect: false,
         },
         {
-          title: "Game Music",
+          title: "Pixel Perfect",
           perform: "DeepMusicEveryDay",
           album: "DeepMusicEveryDay",
           album_img: "unknown.jpg",
-          src: "game-music.mp3",
+          src: "pixel-perfect.mp3",
           date_ad: "4 hours ago",
-          duration: 40,
+          duration: 91,
           isSelect: false,
         },
       ],
@@ -177,10 +199,22 @@ export default {
       formatTimeEnd: "",
       playingID: null,
       isPlay: null,
+      isContextMenuActive: false,
     };
   },
   mounted() {
     this.$emit("track", this.songs[0]);
+    window.addEventListener("keydown", (e) => {
+      this.isContextMenuActive = false;
+      this.$emit("context-menu", this.isContextMenuActive);
+      if (e.key == "Escape") {
+        this.songs.forEach(function (item) {
+          if (item.isSelect == true) {
+            item.isSelect = false;
+          }
+        });
+      }
+    });
   },
   watch: {
     switch() {
@@ -225,7 +259,38 @@ export default {
       this.playingID = id;
     },
     selectItem(e, item) {
+      let songs = this.songs;
       this.songs[item].isSelect = !this.songs[item].isSelect;
+      if (!e.ctrlKey && !e.shiftKey) {
+        this.songs.forEach(function (i, index) {
+          if (i.isSelect && index != item) {
+            i.isSelect = false;
+          }
+        });
+      }
+      if (e.shiftKey) {
+        this.songs.forEach(function (i, index) {
+          if (songs[index].isSelect) {
+            if (item < index) {
+              while (item != index) {
+                songs[index].isSelect = true;
+                index--;
+              }
+            } else {
+              while (item != index) {
+                songs[index].isSelect = true;
+                index++;
+              }
+            }
+            return;
+          }
+        });
+        this.songs = songs;
+      }
+    },
+    openContextMenu() {
+      this.isContextMenuActive = true;
+      this.$emit("context-menu", this.isContextMenuActive);
     },
     getTime(sec) {
       let timestamp = sec;
