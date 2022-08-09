@@ -325,7 +325,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .player {
   &__content {
     display: grid;
