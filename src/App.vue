@@ -55,6 +55,12 @@ export default {
       isContextMenyActive: false,
     };
   },
+  created() {
+    document.addEventListener(
+      "click",
+      () => (this.isContextMenyActive = false)
+    );
+  },
   methods: {
     getContextMenuStatus(status) {
       if (status == true) {
